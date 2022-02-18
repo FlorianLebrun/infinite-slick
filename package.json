@@ -1,0 +1,28 @@
+{
+   "name": "infinite-slick",
+   "version": "1.0.0",
+   "source": "src/webapp/index.html",
+   "scripts": {
+      "start": "parcel",
+      "build": "parcel build --public-url ./"
+   },
+   "dependencies": {
+      "@emotion/react": "^11.7.1",
+      "@emotion/styled": "^11.6.0",
+      "@mui/icons-material": "^5.4.1",
+      "@mui/material": "^5.4.1",
+      "react": "^17.0.2",
+      "react-dom": "^17.0.2",
+      "react-router-dom": "^6.2.1"
+   },
+   "devDependencies": {
+      "@parcel/packager-raw-url": "^2.2.1",
+      "@parcel/transformer-webmanifest": "^2.2.1",
+      "@parcel/validator-typescript": "^2.2.1",
+      "@types/react": "^17.0.39",
+      "@types/react-dom": "^17.0.11",
+      "@types/react-router-dom": "^5.3.2",
+      "parcel": "^2.2.1",
+      "typescript": "^4.5.2"
+   }
+}
