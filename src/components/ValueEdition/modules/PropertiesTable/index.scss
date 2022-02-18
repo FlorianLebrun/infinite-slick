@@ -1,0 +1,30 @@
+.InSlick-PropertiesTable {
+  overflow: hidden;
+
+  & > .Line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  & > .Line > .PropertyName {
+    max-width: 30%;
+    min-width: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  & > .Line > .PropertyValue {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  & > .ExpandLine {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px 0 5px 15px;
+    background-color: #fff1;
+  }
+  & > .ExpandLine > * {
+    flex: 1 1 auto;
+  }
+}

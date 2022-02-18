@@ -1,0 +1,11 @@
+.InSlick-ExpendableNode {
+  & > .Label {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    align-items: center;
+  }
+  & > .Content {
+    padding-left: 10px;
+  }
+}

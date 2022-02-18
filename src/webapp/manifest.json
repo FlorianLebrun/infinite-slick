@@ -1,0 +1,14 @@
+{
+   "name": "Infinite Slick",
+   "short_name": "WynMon",
+   "icons": [
+     {
+       "src": "./favicon.png",
+       "sizes": "55x55",
+       "type": "image/png"
+     }
+   ],
+   "theme_color": "#ffffff",
+   "background_color": "#ffffff",
+   "display": "standalone"
+ }

@@ -1,0 +1,39 @@
+
+.InSlick-ValueInput {
+  // Position
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  // Skin
+  border-bottom: 1px solid var(--app-separator);
+  color: var(--app-separator);
+
+  & > .Icon {
+    cursor: pointer;
+    min-width: 10px;
+    padding: 5px;
+    margin-right: 5px;
+  }
+
+  & > .Icon:hover {
+    background-color: var(--app-separator);
+  }
+
+  & > :nth-child(2) {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  & > :nth-child(3) {
+    cursor: pointer;
+    min-width: 10px;
+  }
+
+  & > .Clickable {
+    cursor: pointer;
+  }
+  & > .Clickable:hover {
+    color: var(--app-value-forecolor);
+  }
+}

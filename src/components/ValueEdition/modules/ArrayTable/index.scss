@@ -1,0 +1,15 @@
+.InSlick-ArrayTable {
+  overflow: hidden;
+
+  & > .Line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  & > .Line > :first-child {
+    cursor: grab;
+  }
+  & > .Line > :nth-child(2) {
+    flex: 1;
+  }
+}

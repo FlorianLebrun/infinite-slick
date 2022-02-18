@@ -1,0 +1,9 @@
+{
+  "window.title": "editor",
+  "search.exclude": {
+    "**/.git": true,
+    "**/.parcel-cache": true,
+    "**/node_modules": true,
+    "**/dist": true
+  }
+}
