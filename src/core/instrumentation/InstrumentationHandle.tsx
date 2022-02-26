@@ -86,7 +86,8 @@ export class InstrumentationHandle extends React.Component {
 
     // Render icon
     const iconDesc = controller.getIcon()
-    const icon = <Icon className="icon" name={iconDesc.name} inversed/>
+    const icon = <Icon className="icon" name={iconDesc.name} inversed />
+    const title = controller.getTitle()
 
     // Render header
     return (<div
@@ -95,9 +96,10 @@ export class InstrumentationHandle extends React.Component {
       onClick={this.handleSelect}
       onDoubleClick={this.handleEdit}
       onContextMenu={this.handleMenu}
+      title={title}
     >
       {icon}
-      <span className="label">{controller.getTitle()}</span>
+      <span className="label">{title}</span>
       {removable && <Icon className="remover" name="action/close" onClick={this.handleRemove} />}
     </div>)
   }

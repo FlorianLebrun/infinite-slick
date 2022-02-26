@@ -132,14 +132,16 @@ class ZoneHeader extends React.Component {
     // Render icon
     const iconDesc = controller.getIcon()
     const icon = <Icon className="icon" name={iconDesc.name} inversed />
+    const title = controller.getTitle()
 
     // Render header
     return (<div
       ref={this.useElement}
       className="InSlick-Instrumentation-ZoneHeader"
+      title={title}
     >
       {icon}
-      <span className="label">{controller.getTitle()}</span>
+      <span className="label">{title}</span>
     </div>)
   }
 }
