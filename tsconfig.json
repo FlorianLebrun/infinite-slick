@@ -28,6 +28,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "removeComments": true,
+    "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
       "modules/*": [

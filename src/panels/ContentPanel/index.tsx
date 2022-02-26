@@ -2,7 +2,7 @@ import React from 'react'
 import InSlick, { Program, ValueController, ValueDesc } from 'core'
 import DevEnv from 'core/development'
 import { CommonTypes } from 'core/typing/schema'
-import { InstrumentationSupport, InstrumentationZone } from 'core/instrumentation'
+import { IInstrumentationSupport, InstrumentationSupport, InstrumentationZone } from 'core/instrumentation'
 import Listener from "components/Listener"
 import connector from '../editor-connector'
 import './index.scss'
@@ -60,10 +60,11 @@ export class ContentPanel extends WindowComponent<DevPlugin> {
     Component: React.ComponentType<any>
   }
   state = {
-    pos: true,
     propertiesDesc: convertToDataDescriptor(propertiesDefault),
     propertiesValue: propertiesDefault,
   }
+  support: IInstrumentationSupport
+
   setPropertiesValue = (desc) => {
     this.setState({
       propertiesDesc: desc,
@@ -71,6 +72,9 @@ export class ContentPanel extends WindowComponent<DevPlugin> {
     })
   }
   onReload = () => {
+  }
+  onDisplaySwitch = () => {
+    this.support.setDisplay(!this.support.compacted)
   }
   onSelect = (target: InstrumentationZone, event: MouseEvent) => {
     const controller = target.getController()
@@ -121,11 +125,17 @@ export class ContentPanel extends WindowComponent<DevPlugin> {
   componentDidCatch(error, errorInfo) {
     console.log({ error, errorInfo })
   }
+  useSupport = (support: IInstrumentationSupport) => {
+    this.support = support
+  }
   render() {
     const { program, Component } = this.props
     const { propertiesDesc, propertiesValue } = this.state
     return (<div className="InSlick-ContentEditor">
-      <Button name="action/refresh" secondary onClick={this.onReload} />
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <Button name="action/refresh" secondary onClick={this.onReload} />
+        <Button name="action/gripper" secondary onClick={this.onDisplaySwitch} />
+      </div>
       <ValueEdition.Editor
         typing={program.props.typing || CommonTypes.any}
         value={propertiesDesc}
@@ -137,6 +147,7 @@ export class ContentPanel extends WindowComponent<DevPlugin> {
         onEvent={null}
       >
         <InstrumentationSupport
+          ref={this.useSupport}
           onDrag={this.dragData}
           onDrop={this.dropData as any}
           onSelect={this.onSelect}

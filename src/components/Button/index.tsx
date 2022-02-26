@@ -7,7 +7,7 @@ export default function Button(props: {
   secondary?: boolean
   onClick: any
 }) {
-  return (<div className={props.secondary ? "InSlick-Button secondary" : "InSlick-Button primary"}>
+  return (<div className={props.secondary ? "InSlick-Button secondary" : "InSlick-Button primary"} onClick={props.onClick}>
     <Icon name={props.name} />
   </div>)
 }

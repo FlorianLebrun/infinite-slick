@@ -14,18 +14,39 @@ type PropsType = {
   onSelect?: (target: InstrumentationZone, event: MouseEvent) => void
   onDrag?: (target: InstrumentationZone, event: DragEvent) => any
   onDrop?: (target: InstrumentationZone, data: any, event: DragEvent) => void
+  onRegisterZone?: (target: InstrumentationZone) => void
+  onUnregisterZone?: (target: InstrumentationZone) => void
   children?: any
 }
 
-export class InstrumentationSupport extends React.Component {
+export interface IInstrumentationSupport {
+  readonly compacted: boolean
+  readonly zones: Set<InstrumentationZone>
+  setDisplay(compacted: boolean)
+}
+
+export const ReactInstrumentationContext = React.createContext<InstrumentationSupport>(null)
+
+export class InstrumentationSupport extends React.Component implements IInstrumentationSupport {
   props: PropsType
-  selected: DOMSelection
-  hovered: DOMSelection
-  timer: any
 
-  support: HTMLElement
-  overlay: HTMLElement
+  selected: DOMSelection = null
+  hovered: DOMSelection = null
+  timer: any = 0
+  compacted: boolean = false
 
+  support: HTMLElement = null
+  overlay: HTMLElement = null
+
+  zones: Set<InstrumentationZone> = new Set()
+
+  setDisplay(compacted: boolean) {
+    this.compacted = compacted
+    for (const zone of this.zones.values()) {
+      zone.forceUpdate()
+      zone.handle?.forceUpdate()
+    }
+  }
   componentDidMount() {
     const { support } = this
     support.tabIndex = -1
@@ -157,11 +178,21 @@ export class InstrumentationSupport extends React.Component {
   useOverlay = (element: HTMLElement) => {
     this.overlay = element
   }
+  registerZone(target: InstrumentationZone) {
+    this.zones.add(target)
+    this.props.onRegisterZone?.(target)
+  }
+  unregisterZone(target: InstrumentationZone) {
+    this.zones.delete(target)
+    this.props.onUnregisterZone?.(target)
+  }
   render() {
     const { children } = this.props
     return (<div ref={this.useSupport} className="InSlick-Instrumentation-Support">
-      <div ref={this.useOverlay} />
-      {children}
+      <ReactInstrumentationContext.Provider value={this}>
+        <div ref={this.useOverlay} />
+        {children}
+      </ReactInstrumentationContext.Provider>
     </div>)
   }
 }

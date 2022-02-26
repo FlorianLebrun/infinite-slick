@@ -81,12 +81,12 @@ export class InstrumentationHandle extends React.Component {
 
     // Determine displaying
     let className = "InSlick-Instrumentation-Handler"
-    if (instrumentation.isInlaid) className += " inlaid"
+    if (controller.isInlaid && !instrumentation.context.compacted) className += " inlaid"
     else className += " floating"
 
     // Render icon
     const iconDesc = controller.getIcon()
-    const icon = <Icon className="icon" name={iconDesc.name} />
+    const icon = <Icon className="icon" name={iconDesc.name} inversed/>
 
     // Render header
     return (<div

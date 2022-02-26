@@ -1,6 +1,7 @@
 import React from "react"
 import { InstrumentationHandle } from "./InstrumentationHandle"
 import { InstrumentationController } from "./InstrumentationController"
+import { ReactInstrumentationContext } from "./InstrumentationSupport"
 import Icon from "../../components/Icon"
 
 type PropsType = {
@@ -8,51 +9,12 @@ type PropsType = {
   children?: any
 }
 
-class InstrumentationZoneHeader extends React.Component {
-  props: {
-    instrumentation: InstrumentationZone
-  }
-  div: HTMLDivElement
-
-  componentDidMount() {
-    this.updatePosition()
-  }
-  componentDidUpdate() {
-    this.updatePosition()
-  }
-  updatePosition() {
-    const { parentElement } = this.div
-    parentElement.style.paddingTop = "20px"
-    parentElement.style.position = "relative"
-  }
-  useElement = (element: HTMLDivElement) => {
-    this.div = element
-  }
-  render() {
-    const { instrumentation } = this.props
-    const controller = instrumentation.getController()
-
-    // Render icon
-    const iconDesc = controller.getIcon()
-    const icon = <Icon className="icon" name={iconDesc.name} />
-
-    // Render header
-    return (<div
-      ref={this.useElement}
-      className="InSlick-Instrumentation-ZoneHeader"
-    >
-      {icon}
-      <span className="label">{controller.getTitle()}</span>
-    </div>)
-  }
-}
-
-
 export class InstrumentationZone extends React.Component {
   props: PropsType
   isSelected: boolean = false
   handle: InstrumentationHandle = null
   error: Error = null
+  static contextType = ReactInstrumentationContext
   static $$instrumentation = true
 
   private retry = () => {
@@ -63,17 +25,6 @@ export class InstrumentationZone extends React.Component {
   /***************************************************************
    * Instrumentation interface
    **************************************************************/
-  get isInlaid(): boolean {
-    const { controller } = this.props
-    const { instrumentation } = this.context
-    if (instrumentation) {
-      // this.isCompact = root["editDisplayLight"] || !root["editMode"] || instrumentation.isCompact || data.compacted || false
-      return instrumentation.isInlaid
-    }
-    else {
-      return controller.isInlaid
-    }
-  }
   getController(): InstrumentationController {
     return this.props.controller
   }
@@ -89,7 +40,9 @@ export class InstrumentationZone extends React.Component {
       this.handle && this.handle.forceUpdate()
     }
   }
-  updateStatus() {
+  compact() {
+  }
+  uncompact() {
   }
   registerHandle(handle: InstrumentationHandle): void {
     this.handle = handle
@@ -103,11 +56,10 @@ export class InstrumentationZone extends React.Component {
    * React interface
    **************************************************************/
   componentWillMount() {
-    this.updateStatus()
-    //this.context.root.registerZone(this)
+    this.context.registerZone(this)
   }
   componentWillUnmount() {
-    //this.context.root.unregisterZone(this)
+    this.context.unregisterZone(this)
   }
   componentDidCatch(e) {
     this.error = new Error(e.message)
@@ -125,7 +77,7 @@ export class InstrumentationZone extends React.Component {
     else if (controller.isInlaid === true) {
       return (<>
         {this.props.children}
-        <InstrumentationZoneHeader instrumentation={this} />
+        {this.context.compacted ? null : <ZoneHeader instrumentation={this} />}
       </>)
     }
     else {
@@ -137,6 +89,58 @@ export class InstrumentationZone extends React.Component {
 function ErrorFallback(message: string): React.ElementType {
   return function (props) {
     return <span title={message} style={{ overflow: "hidden", backgroundColor: "#f00a" }}>{message}</span>
+  }
+}
+
+class ZoneHeader extends React.Component {
+  props: {
+    instrumentation: InstrumentationZone
+  }
+  div: HTMLDivElement
+  previous_paddingTop: string = ""
+  previous_position: string = ""
+  componentDidMount() {
+    this.updatePosition()
+  }
+  componentDidUpdate() {
+    this.updatePosition()
+  }
+  updatePosition() {
+    const { parentElement } = this.div
+    parentElement.style.paddingTop = "20px"
+    parentElement.style.position = "relative"
+  }
+  useElement = (element: HTMLDivElement) => {
+    if (element !== this.div) {
+      if (this.div) {
+        const { parentElement } = this.div
+        parentElement.style.paddingTop = this.previous_paddingTop
+        parentElement.style.position = this.previous_position
+      }
+      if (element) {
+        const { parentElement } = element
+        this.previous_paddingTop = parentElement.style.paddingTop
+        this.previous_position = parentElement.style.position
+      }
+      this.div = element
+    }
+  }
+  render() {
+    const { instrumentation } = this.props
+    const controller = instrumentation.getController()
+
+    // Render icon
+    const iconDesc = controller.getIcon()
+    const icon = <Icon className="icon" name={iconDesc.name} inversed />
+
+    // Render header
+    return (<div
+      ref={this.useElement}
+      className="InSlick-Instrumentation-ZoneHeader"
+    >
+      {icon}
+      <span className="label">{controller.getTitle()}</span>
+    </div>)
   }
 }
 

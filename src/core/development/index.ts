@@ -1,5 +1,6 @@
 import { CommonTypes, JSONSchema } from "core/typing/schema"
-import { ElementDesc } from "./program/operators"
+import { ElementDesc } from "../program/operators"
+import { IComponentCollection } from "./collection"
 import InSlick from "core/engine"
 
 export type SearchPattern = {
